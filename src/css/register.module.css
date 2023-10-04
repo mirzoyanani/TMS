@@ -1,0 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 55px;
+  height: auto;
+  background-color: beige;
+}
+.register_container {
+  padding: 20px;
+  margin: 15px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+.imageInput {
+  width: 430px;
+}
+.groups {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.form_group {
+  margin-bottom: 20px;
+}
+
+.form_group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #36383a;
+}
+
+.form_group input[type="text"],
+.form_group input[type="tel"],
+.form_group input[type="email"],
+.form_group input[type="password"] {
+  width: 400px;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.form_group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+  color: wheat;
+}
+
+.additional_options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  color: #36383a;
+  font-weight: bolder;
+}
+.title {
+  font-size: 44px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2b80d6;
+}
+@media (max-width: 955px) {
+  .register_container {
+    max-width: 800px;
+  }
+  .form_group input[type="text"],
+  .form_group input[type="tel"],
+  .form_group input[type="email"],
+  .form_group input[type="password"] {
+    width: 300px;
+    height: 30px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .imageInput {
+    width: 330px;
+  }
+}
+@media (max-width: 720px) {
+  .register_container {
+    max-width: 700px;
+  }
+  .form_group input[type="text"],
+  .form_group input[type="tel"],
+  .form_group input[type="email"],
+  .form_group input[type="password"] {
+    width: 250px;
+    height: 30px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .imageInput {
+    width: 280px;
+  }
+}
+@media (max-width: 620px) {
+  .register_container {
+    max-width: 550px;
+  }
+  .form_group input[type="text"],
+  .form_group input[type="tel"],
+  .form_group input[type="email"],
+  .form_group input[type="password"] {
+    width: 250px;
+    height: 30px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .imageInput {
+    width: 310px;
+  }
+}
+
+@media (max-width: 620px) {
+  .register_container {
+    max-width: 500px;
+  }
+  .form_group input[type="text"],
+  .form_group input[type="tel"],
+  .form_group input[type="email"],
+  .form_group input[type="password"] {
+    width: 250px;
+    height: 30px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .imageInput {
+    width: 290px;
+  }
+  .groups {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 15px;
+  }
+  .title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 350px) {
+  .register_container {
+    max-width: 500px;
+  }
+  .form_group input[type="text"],
+  .form_group input[type="tel"],
+  .form_group input[type="email"],
+  .form_group input[type="password"] {
+    width: 200px;
+    height: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .imageInput {
+    width: 230px;
+  }
+  .groups {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 15px;
+  }
+  .title {
+    font-size: 30px;
+  }
+}
