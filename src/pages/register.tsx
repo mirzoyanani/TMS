@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styles from "../css/register.module.css";
+import { useNavigate } from "react-router-dom";
 const Register: React.FC = () => {
+  const naviagte = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -10,7 +12,7 @@ const Register: React.FC = () => {
     profileImage: null as File | null,
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -18,7 +20,7 @@ const Register: React.FC = () => {
     });
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const imageFile = e.target.files?.[0] || null;
     setFormData({
       ...formData,
@@ -26,7 +28,7 @@ const Register: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     console.log("Form Data:", formData);
@@ -110,7 +112,9 @@ const Register: React.FC = () => {
               />
             </div>
           </div>
-          <button type="submit">Register</button>
+          <button type="submit" onClick={() => naviagte("/")}>
+            Register
+          </button>
         </form>
       </div>
     </div>

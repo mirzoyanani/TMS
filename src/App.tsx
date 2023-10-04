@@ -6,6 +6,8 @@ import "./App.css";
 import Login from "./pages/login.tsx";
 import Register from "./pages/register.tsx";
 import ForgetPassword from "./pages/forgetPassword.tsx";
+import SubmitCod from "./pages/submitCod.tsx";
+import NewPassword from "./pages/newPassword.tsx";
 function App() {
   return (
     <>
@@ -14,6 +16,8 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/submitCod" element={<SubmitCod />} />
+          <Route path="/newPassword" element={<NewPassword />} />
         </Routes>
       </BrowserRouter>
     </>

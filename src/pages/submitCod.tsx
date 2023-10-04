@@ -1,6 +1,7 @@
 import styles from "../css/getPassword.module.css";
-import PasswordCard from "../components/SearchEmailCard";
-const forgetPassword = () => {
+import PasswordCard from "../components/SubmitCodCard";
+
+const VerificationCod = () => {
   return (
     <div className={styles.main_div}>
       <div className={styles.logo}>
@@ -21,14 +22,14 @@ const forgetPassword = () => {
         </div>
       </div>
       <PasswordCard
-        title="Write your email"
-        text="Please enter your email or mobile number to search for your account."
-        placeholder="email or telephone"
+        title="Enter security code"
+        text="Please check your phone for a text message with your code. Your code is 6 characters long.."
+        placeholder="Enter cod"
         btn1="Cancel"
-        btn2="Search"
+        btn2="Continue"
       />
     </div>
   );
 };
 
-export default forgetPassword;
+export default VerificationCod;

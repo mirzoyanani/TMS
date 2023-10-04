@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "../css/login.module.css";
-import Logo from "../components/logo";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
@@ -25,7 +24,23 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.main_div}>
-      <Logo />
+      <div className={styles.logo}>
+        <div className={styles.logo_items}>
+          <h1 className={styles.tword}>T</h1>
+          <h1 className={styles.word_items}>ask</h1>
+        </div>
+
+        <div className={styles.logo_items}>
+          <h1 className={styles.mword}>M</h1>
+          <h1 className={styles.word_items}>anagement</h1>
+        </div>
+        <div>
+          <div className={styles.logo_items}>
+            <h1 className={styles.sword}>S</h1>
+            <h1 className={styles.word_items}>ystem</h1>
+          </div>
+        </div>
+      </div>
 
       <div className={styles.login_container}>
         <h2 className={styles.login_title}>
