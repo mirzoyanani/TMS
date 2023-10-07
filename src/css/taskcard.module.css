@@ -1,0 +1,45 @@
+.task_card {
+  border: 1px solid #a27c7c;
+  padding: 16px;
+  margin: 16px;
+  background-color: #fff;
+}
+
+.task_card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.task_card p {
+  margin: 4px 0;
+}
+
+.task_card button {
+  margin-right: 8px;
+}
+.react_modal {
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 1000;
+  max-width: 80%;
+}
+
+/* Overlay styles */
+.react_modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

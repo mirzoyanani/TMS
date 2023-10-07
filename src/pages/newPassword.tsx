@@ -1,5 +1,5 @@
 import styles from "../css/getPassword.module.css";
-import PasswordCard from "../components/submitNewPassword";
+import NewPasswordCard from "../components/SubmitNewPassword";
 
 const newPassword = () => {
   return (
@@ -21,7 +21,7 @@ const newPassword = () => {
           </div>
         </div>
       </div>
-      <PasswordCard
+      <NewPasswordCard
         title="Choose a new password"
         text="Create a new password that is at least 6 characters long. A strong password is combination of letters, numbers, and punctuation marks."
         placeholder="Write new Password"
