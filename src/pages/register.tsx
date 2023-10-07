@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import styles from "../css/register.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { HOST_NAME } from "../lib";
 const Register: React.FC = () => {
   const naviagte = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
+    surname: "",
     telephone: "",
     email: "",
     password: "",
-    profileImage: null as File | null,
+    profilePicture: null as File | null,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -24,14 +26,26 @@ const Register: React.FC = () => {
     const imageFile = e.target.files?.[0] || null;
     setFormData({
       ...formData,
-      profileImage: imageFile,
+      profilePicture: imageFile,
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-
     console.log("Form Data:", formData);
+
+    try {
+      const response = await axios.post(`${HOST_NAME}/auth/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data) {
+        naviagte("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -42,22 +56,15 @@ const Register: React.FC = () => {
           <div className={styles.groups}>
             <div className={styles.form_group}>
               <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                required
-              />
+              <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
             </div>
             <div className={styles.form_group}>
               <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
+                id="surame"
+                name="surname"
+                value={formData.surname}
                 onChange={handleInputChange}
                 required
               />
@@ -112,9 +119,7 @@ const Register: React.FC = () => {
               />
             </div>
           </div>
-          <button type="submit" onClick={() => naviagte("/")}>
-            Register
-          </button>
+          <button type="submit">Register</button>
         </form>
       </div>
     </div>

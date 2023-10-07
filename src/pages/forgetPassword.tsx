@@ -24,8 +24,7 @@ const forgetPassword = () => {
         title="Write your email"
         text="Please enter your email or mobile number to search for your account."
         placeholder="email or telephone"
-        btn1="Cancel"
-        btn2="Search"
+        btn="Search"
       />
     </div>
   );

@@ -1,37 +1,59 @@
+import { useState } from "react";
 import styles from "../css/getPassword.module.css";
 import { useNavigate } from "react-router-dom";
+import { HOST_NAME } from "../lib";
+import axios from "axios";
 type Props = {
   title: string;
   text: string;
   placeholder: string;
-  btn1: string;
-  btn2: string;
+  btn: string;
 };
 
 const EmailCard = (props: Props) => {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  function switchPage(): void {
-    console.log(555);
-    navigate("/submitCod");
+  async function switchPage(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault();
+    {
+      if (email) {
+        try {
+          const response = await axios({
+            url: `${HOST_NAME}/auth/forgetPassword`,
+            method: "POST",
+            data: {
+              email: email,
+            },
+            responseType: "json",
+          });
+          if (response.data) {
+            localStorage.setItem("token", response.data.data.token);
+            navigate("/submitCod");
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          setError(error.response.data.meta.error.message);
+        }
+      }
+    }
   }
   return (
     <div className={styles.card}>
       <h1 className={styles.title}>{props.title}</h1>
       <h3 className={styles.text}>{props.text}</h3>
-      <form>
-        <input className={styles.emailInput} type="email" name="" id="" placeholder={props.placeholder} />
+      <form onSubmit={switchPage}>
+        <input
+          className={styles.emailInput}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          name=""
+          id=""
+          placeholder={props.placeholder}
+        />
+        {error && <div style={{ margin: "22px", color: "red" }}>{error}</div>}
         <div className={styles.buttons}>
-          <button
-            onClick={() => {
-              navigate("/");
-            }}
-            className={styles.btn1}
-          >
-            {props.btn1}
-          </button>
-          <button onClick={switchPage} className={styles.btn2}>
-            {props.btn2}
-          </button>
+          <button className={styles.btn2}>{props.btn}</button>
         </div>
       </form>
     </div>

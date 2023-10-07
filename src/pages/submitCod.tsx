@@ -25,8 +25,7 @@ const VerificationCod = () => {
         title="Enter security code"
         text="Please check your phone for a text message with your code. Your code is 6 characters long.."
         placeholder="Enter cod"
-        btn1="Cancel"
-        btn2="Continue"
+        btn="Continue"
       />
     </div>
   );

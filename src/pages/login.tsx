@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styles from "../css/login.module.css";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { HOST_NAME } from "../lib";
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -15,11 +17,27 @@ const Login: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    try {
+      const response = await axios({
+        url: `${HOST_NAME}/auth/login`,
+        method: "POST",
+        data: {
+          email: username,
+          password,
+        },
+        responseType: "json",
+      });
 
-    console.log("Username:", username);
-    console.log("Password:", password);
+      if (response.data) {
+        localStorage.setItem("token", response.data.data.token);
+        navigate("/general");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setError(error.response.data.meta.error.message);
+    }
   };
 
   return (
@@ -69,6 +87,7 @@ const Login: React.FC = () => {
               required
             />
           </div>
+          {error && <div style={{ margin: "22px", color: "red" }}>{error}</div>}
           <button type="submit">Login</button>
         </form>
         <div className={styles.additional_options}>
