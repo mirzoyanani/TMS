@@ -1,25 +1,48 @@
 import React, { useState } from "react";
 import styles from "../css/header.module.css";
+import axios from "axios";
+import { HOST_NAME } from "../lib";
+import { setTasks } from "../redux/reducers/tasksSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
 
+  const token = localStorage.getItem("token");
+  const [inputValue, setInputValue] = useState("");
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
   const handleMenuItemClick = (route: string) => {
-    console.log(`Navigating to: ${route}`);
+    navigate(route);
   };
-
+  async function searchTasks(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    {
+      e.preventDefault();
+      try {
+        const response = await axios.get(`${HOST_NAME}/task/search?title=${inputValue}`, {
+          headers: { token },
+        });
+        dispatch(setTasks(response.data.data.items.data));
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    }
+  }
   return (
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.logo}>T M S</div>
       </div>
       <div className={styles.search}>
-        <input type="text" placeholder="Search" />
-        <button className={styles.searchButton}>Search</button>
+        <form onSubmit={searchTasks}>
+          <input type="text" placeholder="Search" onChange={(e) => setInputValue(e.target.value)} />
+          <button className={styles.searchButton}>Search</button>
+        </form>
       </div>
       <div className={styles.right}>
         <div className={styles.userIcon} onClick={toggleDropdown}>

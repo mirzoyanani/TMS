@@ -59,6 +59,7 @@ button.searchButton {
   border-radius: 4px;
   box-shadow: 0 2px 4px #0056b3;
   font-weight: bolder;
+  background-color: beige;
 }
 
 ul {
