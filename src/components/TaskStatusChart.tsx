@@ -1,31 +1,45 @@
-import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/reducers/persistReducer";
+import { useEffect, useRef, useState } from "react";
 import Chart, { ChartConfiguration, ChartData } from "chart.js/auto";
+import axios from "axios";
+import { HOST_NAME } from "../lib";
 
 const TaskStatusChart = () => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
-  const statuses = useSelector((state: RootState) => state.task.allStatuses);
+  const token = localStorage.getItem("token");
+  interface StatusCount {
+    todo_count: number;
+    in_progress_count: number;
+    done_count: number;
+  }
+  const [statusCount, setStatusCount] = useState<StatusCount>({
+    todo_count: 0,
+    in_progress_count: 0,
+    done_count: 0,
+  });
+
+  useEffect(() => {
+    async function getStatuses() {
+      try {
+        const response = await axios.get(`${HOST_NAME}/statistics`, {
+          headers: { token },
+        });
+        setStatusCount(response.data.data.statusCounts[0]);
+      } catch (error) {
+        console.error("Error fetching statuses:", error);
+      }
+    }
+    getStatuses();
+  }, [token]);
 
   const chartInstanceRef = useRef<Chart<"bar"> | null>(null);
 
   useEffect(() => {
-    const statusCount: { [key: string]: number } = {
-      todo: 0,
-      "in progress": 0,
-      done: 0,
-    };
-
-    statuses.forEach((task: { status: string }) => {
-      statusCount[task.status] += 1;
-    });
-
     const chartData: ChartData<"bar"> = {
       labels: ["todo", "in progress", "done"],
       datasets: [
         {
           label: "Task Statistics",
-          data: [statusCount.todo, statusCount["in progress"], statusCount.done],
+          data: [statusCount.todo_count, statusCount.in_progress_count, statusCount.done_count],
           backgroundColor: ["rgba(255, 99, 132, 0.5)", "rgba(54, 162, 235, 0.5)", "rgba(95, 192, 192, 0.5)"],
         },
       ],
@@ -61,7 +75,7 @@ const TaskStatusChart = () => {
         chartInstanceRef.current = newChart;
       }
     }
-  }, [statuses]);
+  }, [statusCount.done_count, statusCount.in_progress_count, statusCount.todo_count]);
 
   return (
     <div>

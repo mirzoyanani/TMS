@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import styles from "../css/userPage.module.css";
+import styles from "../css/generalPage.module.css";
 import { HOST_NAME } from "../lib";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,24 +17,41 @@ const UserPage = () => {
   const [status, setStatus] = useState("");
   const pageItemsCount = 10;
   const tasks = useSelector((state: RootState) => state.task.tasks);
-  //   console.log(tasks);
+  // console.log(tasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     endDate: "",
   });
-  const openModal = () => {
+  const openModal = (): void => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setIsModalOpen(false);
   };
-  const createTask = () => {
+
+  const createTask = async (): Promise<void> => {
+    const formattedDate = new Date(newTask.endDate).toISOString().slice(0, 19).replace("T", " ");
+    try {
+      await axios.post(
+        `${HOST_NAME}/task`,
+        {
+          title: newTask.title,
+          description: newTask.description,
+          end_date: formattedDate,
+        },
+        {
+          headers: { token },
+        },
+      );
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
     closeModal();
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setNewTask((prevTask) => ({
       ...prevTask,
@@ -95,9 +112,9 @@ const UserPage = () => {
           </button>
         </div>
       </div>
-      <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Create Task Modal">
-        <h2>Create a New Task</h2>
-        <form>
+      <Modal className={styles.modal} isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Create Task Modal">
+        <h2 className={styles.modal_title}>Create a New Task</h2>
+        <form className={styles.modal_form}>
           <div>
             <label htmlFor="title">Title:</label>
             <input type="text" id="title" name="title" value={newTask.title} onChange={handleInputChange} />
@@ -105,15 +122,18 @@ const UserPage = () => {
           <div>
             <label htmlFor="description">Description:</label>
             <textarea
+              maxLength={100}
               id="description"
               name="description"
               value={newTask.description}
+              className={styles.discription_area}
               onChange={handleInputChange}
             ></textarea>
           </div>
           <div>
             <label htmlFor="endDate">End Date and Time:</label>
             <input
+              className={styles.task_date}
               type="datetime-local"
               id="endDate"
               name="endDate"
@@ -121,12 +141,14 @@ const UserPage = () => {
               onChange={handleInputChange}
             />
           </div>
-          <button type="button" onClick={createTask}>
-            Create Task
-          </button>
-          <button type="button" onClick={closeModal}>
-            Cancel
-          </button>
+          <div className={styles.btns}>
+            <button className={styles.modal_btn} type="button" onClick={createTask}>
+              Create Task
+            </button>
+            <button className={styles.modal_btn} type="button" onClick={closeModal}>
+              Cancel
+            </button>
+          </div>
         </form>
       </Modal>
       <div className="tasks">

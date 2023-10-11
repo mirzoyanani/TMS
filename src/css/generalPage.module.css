@@ -1,0 +1,77 @@
+.main {
+  display: flex;
+  padding: 10px 20px;
+  justify-content: space-between;
+  background-color: beige;
+}
+.changeStatusBtns {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-left: 2px solid #0056b3;
+  padding-left: 70px;
+  gap: 40px;
+}
+.createBask,
+.taskstatus {
+  width: 250px;
+  height: 30px;
+  border: 2px solid #0056b3;
+  border-radius: 4px;
+  font-weight: bolder;
+  color: #0056b3;
+  cursor: pointer;
+}
+.modal {
+  width: 450px;
+  height: 400px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 1000;
+}
+.modal_title {
+  font-weight: bold;
+  font-size: 25px;
+}
+.modal_form {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-direction: column;
+  height: 100%;
+}
+.discription_area {
+  width: 460px;
+  height: 50px;
+  max-width: 460px;
+  max-height: 50px;
+  border: 2px solid #0056b3;
+  border-radius: 5px;
+  display: block;
+  margin-top: 10px;
+}
+.task_date {
+  display: block;
+  margin-top: 10px;
+  border: 2px solid #0056b3;
+  width: 100%;
+}
+.modal_btn {
+  width: 150px;
+  height: 25px;
+  border: 2px solid #0056b3;
+  background-color: beige;
+  cursor: pointer;
+  font-weight: bolder;
+  color: #0056b3;
+}
+.btns {
+  display: flex;
+  gap: 150px;
+}

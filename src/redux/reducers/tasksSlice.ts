@@ -9,18 +9,12 @@ interface Task {
   end_date: string;
 }
 
-interface Status {
-  status: string;
-}
-
 export interface TasksState {
   tasks: Task[];
-  allStatuses: Status[];
 }
 
 const initialState: TasksState = {
   tasks: [],
-  allStatuses: [],
 };
 
 const tasksSlice = createSlice({
@@ -30,11 +24,8 @@ const tasksSlice = createSlice({
     setTasks: (state, action: PayloadAction<Task[]>) => {
       state.tasks = action.payload;
     },
-    setAllStatuses: (state, action: PayloadAction<Task[]>) => {
-      state.allStatuses = action.payload;
-    },
   },
 });
 
-export const { setTasks, setAllStatuses } = tasksSlice.actions;
+export const { setTasks } = tasksSlice.actions;
 export default tasksSlice.reducer;
