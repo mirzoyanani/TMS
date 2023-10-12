@@ -5,6 +5,9 @@ import axios from "axios";
 import { HOST_NAME } from "../lib";
 const Register: React.FC = () => {
   const naviagte = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("Էլեկտրոնային փոստը արդեն օգտագործվել է");
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -32,7 +35,8 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    // console.log("Form Datas:", formData);
+    setLoading(true);
 
     try {
       const response = await axios.post(`${HOST_NAME}/auth/register`, formData, {
@@ -42,9 +46,14 @@ const Register: React.FC = () => {
       });
       if (response.data) {
         naviagte("/");
+        console.log(response.data, 55555);
       }
-    } catch (error) {
-      console.log(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setErrorMsg(error.response.data.meta.error.message);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,9 +86,11 @@ const Register: React.FC = () => {
                 type="tel"
                 id="telephone"
                 name="telephone"
+                pattern=" /^\+374 \d{6}$/"
                 value={formData.telephone}
                 onChange={handleInputChange}
                 required
+                placeholder="+374 ******"
               />
             </div>
             <div className={styles.form_group}>
@@ -119,7 +130,8 @@ const Register: React.FC = () => {
               />
             </div>
           </div>
-          <button type="submit">Register</button>
+          {error && <div style={{ margin: "22px", color: "red" }}>{errorMsg}</div>}
+          {loading ? <button type="submit">Loading...</button> : <button type="submit">Register</button>}
         </form>
       </div>
     </div>

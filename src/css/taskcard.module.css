@@ -1,10 +1,20 @@
 .task_card {
-  border: 1px solid #a27c7c;
+  border: 2px solid #0056b3;
+  border-radius: 5px;
   padding: 16px;
   margin: 16px;
   background-color: #fff;
+  width: 300px;
+  position: relative;
 }
-
+.status_select {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-weight: bolder;
+  color: #0056b3;
+  border: 2px solid #0056b3;
+}
 .task_card h3 {
   font-size: 18px;
   margin-bottom: 8px;
@@ -16,12 +26,18 @@
 
 .task_card button {
   margin-right: 8px;
+  width: 140px;
+  border: 2px solid #0056b3;
+  background-color: beige;
+  cursor: pointer;
+  font-weight: bolder;
+  color: #0056b3;
 }
 .react_modal {
   position: fixed;
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -30,7 +46,6 @@
   max-width: 80%;
 }
 
-/* Overlay styles */
 .react_modal-overlay {
   position: fixed;
   top: 0;

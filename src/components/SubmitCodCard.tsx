@@ -1,8 +1,9 @@
+import React, { useState } from "react";
 import styles from "../css/getPassword.module.css";
 import { useNavigate } from "react-router-dom";
 import { HOST_NAME } from "../lib";
-import { useState } from "react";
 import axios from "axios";
+
 type Props = {
   title: string;
   text: string;
@@ -10,16 +11,31 @@ type Props = {
   btn: string;
 };
 
+interface Response<T> {
+  data: T;
+  meta: {
+    error: {
+      code: number;
+      message: string;
+    };
+    status: number;
+  };
+}
+
 const CodCard = (props: Props) => {
   const [error, setError] = useState("");
   const [cod, setCod] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
   async function switchPage(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     if (cod) {
       try {
-        const response = await axios({
+        setLoading(true);
+
+        const response = await axios<Response<{ token: string }>>({
           url: `${HOST_NAME}/auth/submitCode`,
           method: "POST",
           data: {
@@ -30,16 +46,22 @@ const CodCard = (props: Props) => {
           },
           responseType: "json",
         });
-        if (response.data) {
+
+        if (!response.data.meta.error) {
           localStorage.setItem("token", response.data.data.token);
           navigate("/newPassword");
+        } else {
+          setError(response.data.meta.error.message);
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        setError(error.response.data.meta.error.message);
+      } catch (err: any) {
+        setError((err.response.data as Response<{ token: string }>).meta.error.message);
+      } finally {
+        setLoading(false);
       }
     }
   }
+
   return (
     <div className={styles.card}>
       <h1 className={styles.title}>{props.title}</h1>
@@ -57,7 +79,9 @@ const CodCard = (props: Props) => {
         />
         {error && <div style={{ margin: "22px", color: "red" }}>{error}</div>}
         <div className={styles.buttons}>
-          <button className={styles.btn2}>{props.btn}</button>
+          <button className={styles.btn2} disabled={loading}>
+            {loading ? "Loading..." : props.btn}
+          </button>
         </div>
       </form>
     </div>

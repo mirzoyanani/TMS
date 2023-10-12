@@ -25,7 +25,7 @@ const newPassword = () => {
         title="Choose a new password"
         text="Create a new password that is at least 6 characters long. A strong password is combination of letters, numbers, and punctuation marks."
         placeholder="Write new Password"
-        btn="Cancel"
+        btn="Submit"
       />
     </div>
   );

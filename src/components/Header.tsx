@@ -16,7 +16,10 @@ const Header: React.FC = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-
+  //   const [page, setPage] = useState(1);
+  //   const [status, setStatus] = useState("");
+  const page = 1;
+  const pageItemsCount = 12;
   const handleMenuItemClick = (route: string) => {
     navigate(route);
   };
@@ -24,10 +27,14 @@ const Header: React.FC = () => {
     {
       e.preventDefault();
       try {
-        const response = await axios.get(`${HOST_NAME}/task/search?title=${inputValue}`, {
-          headers: { token },
-        });
-        dispatch(setTasks(response.data.data.items.data));
+        const response = await axios.get(
+          `${HOST_NAME}/task/search?title=${inputValue}&?page=${page}&pageSize=${pageItemsCount}`,
+          {
+            headers: { token },
+          },
+        );
+
+        dispatch(setTasks(response.data.data.items));
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }

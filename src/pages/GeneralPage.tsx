@@ -15,7 +15,7 @@ const UserPage = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("");
-  const pageItemsCount = 10;
+  const pageItemsCount = 12;
   const tasks = useSelector((state: RootState) => state.task.tasks);
   // console.log(tasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,9 +88,7 @@ const UserPage = () => {
   function onDelete(): void {
     console.log("deleted");
   }
-  function onUpdate(): void {
-    console.log("updated");
-  }
+
   return (
     <div>
       <Header />
@@ -151,9 +149,9 @@ const UserPage = () => {
           </div>
         </form>
       </Modal>
-      <div className="tasks">
+      <div className={styles.tasks}>
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} onDelete={onDelete} onUpdate={onUpdate} />
+          <TaskCard key={task.id} task={task} onDelete={onDelete} />
         ))}
       </div>
       <button onClick={() => setPage(page - 1)}>prev</button>
