@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import Modal from "react-modal";
 
 import styles from "../css/userProfile.module.css";
 import axios from "axios";
 import { HOST_NAME } from "../lib";
 import { useNavigate } from "react-router-dom";
-
+import Footer from "../components/Footer";
+interface Userdata {
+  name: string;
+  surname: string;
+  email: string;
+  telephone: string;
+}
 const UserProfile: React.FC = () => {
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [userData, setUserData] = useState<Userdata>();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
@@ -17,31 +24,30 @@ const UserProfile: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const response = await axios({
-          url: `${HOST_NAME}/user`,
-          method: "GET",
-          headers: {
-            token: token,
-          },
-          responseType: "json",
-        });
-        const userData = response.data.data.data[0];
-        console.log(userData);
-
-        setName(userData.name);
-        setSurname(userData.surname);
-        setEmail(userData.email);
-        setImage(userData.image);
-        setTelephone(userData.telephone);
-      } catch (error) {
-        console.error(error);
-      }
+  async function getUserData() {
+    try {
+      const response = await axios({
+        url: `${HOST_NAME}/user`,
+        method: "GET",
+        headers: {
+          token: token,
+        },
+        responseType: "json",
+      });
+      const userData = response.data.data.data[0];
+      setUserData(userData);
+      setName(userData.name);
+      setSurname(userData.surname);
+      setEmail(userData.email);
+      setImage(userData.image);
+      setTelephone(userData.telephone);
+    } catch (error) {
+      console.error(error);
     }
+  }
+  useEffect(() => {
     getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const openModal = () => {
@@ -57,38 +63,49 @@ const UserProfile: React.FC = () => {
     if (file) {
       setSelectedImage(file);
 
-      // Create a URL for the selected image and set it as a preview
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
     }
   };
 
-  const handleUpdate = async () => {
-    // closeModal();
+  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log("chexav");
 
-    if (selectedImage) {
+    if (
+      (selectedImage && userData) ||
+      (userData && userData.name != name) ||
+      (userData && userData.surname != surname) ||
+      (userData && userData.email != email) ||
+      (userData && userData.telephone != telephone)
+    ) {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("surname", surname);
-      formData.append("email", email);
+      //   formData.append("email", email);
       formData.append("telephone", telephone);
-      formData.append("image", selectedImage);
+      if (selectedImage) {
+        formData.append("profilePicture", selectedImage);
+      } else {
+        formData.append("profilePicture", image);
+      }
 
       try {
         await axios({
-          url: `${HOST_NAME}/updateUser`,
-          method: "POST",
+          url: `${HOST_NAME}/user`,
+          method: "PUT",
           headers: {
             token: token,
           },
           data: formData,
         });
-        // Handle success
+        getUserData();
+        setModalIsOpen(false);
       } catch (error) {
         console.error(error);
-        // Handle error
       }
     }
+    setModalIsOpen(false);
   };
 
   return (
@@ -166,33 +183,22 @@ const UserProfile: React.FC = () => {
             />
           </div>
           <div>
-            <label className={styles.label}>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
-              required
-            />
-          </div>
-
-          <div>
             <label className={styles.label}>Telephone:</label>
             <input
-              type="text"
               value={telephone}
               onChange={(e) => setTelephone(e.target.value)}
               className={styles.input}
               required
+              type="text"
+              pattern="^\+374 \d{8}$"
+              placeholder="+374 12345678"
             />
           </div>
 
           <button className={styles.updateButton}>Update</button>
-          {/* <button className={styles.cancelButton} onClick={closeModal}>
-            Cancel
-          </button> */}
         </form>
       </Modal>
+      <Footer />
     </div>
   );
 };

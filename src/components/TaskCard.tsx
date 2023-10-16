@@ -3,6 +3,7 @@ import styles from "../css/taskcard.module.css";
 import Modal from "react-modal";
 import axios from "axios";
 import { format } from "date-fns";
+import { HOST_NAME } from "../lib";
 Modal.setAppElement("#root");
 
 interface Task {
@@ -17,51 +18,59 @@ interface Task {
 interface TaskCardProps {
   task: Task;
   onDelete: (taskId: number) => void;
+  getTasks: () => void;
+  updateTaskStatus: (taskId: number, status: string) => void;
 }
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return format(date, "dd/MM/yyyy HH:mm:ss");
 };
+function formatISODateToCustomFormat(isoDate: string, customFormat: string) {
+  return format(new Date(isoDate), customFormat);
+}
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, getTasks }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editedTask, setEditedTask] = useState<Task>({ ...task });
-
+  const token = localStorage.getItem("token");
   const handleEdit = () => {
     setModalOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value;
+
+    if (newStatus !== editedTask.status) {
+      updateTaskStatus(editedTask.id, newStatus);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       const taskToUpdate = {
-        ...editedTask,
+        title: editedTask.title,
+        description: editedTask.description,
+        end_date: new Date(editedTask.end_date).toISOString().slice(0, 19).replace("T", " "),
+        id: editedTask.id,
       };
-
-      const response = await axios.put(`/api/tasks/${editedTask.id}`, taskToUpdate);
-
-      console.log("Task updated:", response.data);
-
+      await axios.put(`${HOST_NAME}/task`, taskToUpdate, {
+        headers: {
+          token: token,
+        },
+      });
+      getTasks();
       setModalOpen(false);
     } catch (error) {
       console.error("Error updating task:", error);
     }
   };
-
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setEditedTask({ ...editedTask, [name]: value });
   };
 
-  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-
-    try {
-      axios.put(`/api/tasks/${editedTask.id}`, { status: value });
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
   const getStatusColor = (status: string) => {
     switch (status) {
       case "done":
@@ -77,14 +86,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
 
   return (
     <div className={styles.task_card}>
-      <h3>{editedTask.title}</h3>
+      <h3 className={styles.task_title}>{editedTask.title}</h3>
       <p>Description: {editedTask.description}</p>
       <select
         className={styles.status_select}
         style={{ backgroundColor: getStatusColor(editedTask.status) }}
         name="status"
         value={editedTask.status}
-        onChange={handleStatusChange}
+        onChange={(e) => handleStatusChange(e)}
       >
         <option value="todo">Todo</option>
         <option value="in progress">In Progress</option>
@@ -106,14 +115,36 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Edit Task Modal"
       >
-        <h2>Edit Task</h2>
-        <div className="updateModal">
-          <input type="text" name="title" value={editedTask.title} onChange={handleChange} maxLength={35} />
-          <textarea name="description" value={editedTask.description} onChange={handleChange} />
-          <input type="datetime-local" name="end_date" value={editedTask.end_date} onChange={handleChange} />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={() => setModalOpen(false)}>Cancel</button>
-        </div>
+        <h2> Edit Task</h2>
+        <button className={styles.modal_btn_close} onClick={() => setModalOpen(false)}>
+          X
+        </button>
+        <form onSubmit={handleSave} className={styles.modal_form}>
+          <div>
+            <input required type="text" name="title" value={editedTask.title} onChange={handleChange} maxLength={35} />
+          </div>
+          <div>
+            <textarea
+              required
+              className={styles.discription_area}
+              name="description"
+              value={editedTask.description}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <input
+              required
+              type="datetime-local"
+              name="end_date"
+              value={formatISODateToCustomFormat(editedTask.end_date, "yyyy-MM-dd'T'HH:mm")}
+              onChange={handleChange}
+            />
+          </div>
+          <div className={styles.btns}>
+            <button className={styles.modal_btn}>Save</button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

@@ -1,6 +1,7 @@
 import TaskStatusChart from "../components/TaskStatusChart";
 import styles from "../css/statistics.module.css";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 const Statistics = () => {
   const navigate = useNavigate();
 
@@ -13,6 +14,7 @@ const Statistics = () => {
       <div className={styles.structure}>
         <TaskStatusChart />
       </div>
+      <Footer />
     </div>
   );
 };

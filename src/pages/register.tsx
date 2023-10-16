@@ -5,8 +5,8 @@ import axios from "axios";
 import { HOST_NAME } from "../lib";
 const Register: React.FC = () => {
   const naviagte = useNavigate();
-  const [errorMsg, setErrorMsg] = useState("Էլեկտրոնային փոստը արդեն օգտագործվել է");
-  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  //   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -35,7 +35,6 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    // console.log("Form Datas:", formData);
     setLoading(true);
 
     try {
@@ -46,12 +45,10 @@ const Register: React.FC = () => {
       });
       if (response.data) {
         naviagte("/");
-        console.log(response.data, 55555);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMsg(error.response.data.meta.error.message);
-      setError(true);
     } finally {
       setLoading(false);
     }
@@ -83,14 +80,14 @@ const Register: React.FC = () => {
             <div className={styles.form_group}>
               <label htmlFor="telephone">Telephone</label>
               <input
-                type="tel"
                 id="telephone"
                 name="telephone"
-                pattern=" /^\+374 \d{6}$/"
+                type="text"
+                pattern="^\+374 \d{8}$"
+                placeholder="+374 12345678"
                 value={formData.telephone}
                 onChange={handleInputChange}
                 required
-                placeholder="+374 ******"
               />
             </div>
             <div className={styles.form_group}>
@@ -130,7 +127,7 @@ const Register: React.FC = () => {
               />
             </div>
           </div>
-          {error && <div style={{ margin: "22px", color: "red" }}>{errorMsg}</div>}
+          {errorMsg && <div style={{ margin: "22px", color: "red" }}>{errorMsg}</div>}
           {loading ? <button type="submit">Loading...</button> : <button type="submit">Register</button>}
         </form>
       </div>

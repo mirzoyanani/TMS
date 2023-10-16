@@ -60,6 +60,7 @@ button.searchButton {
   box-shadow: 0 2px 4px #0056b3;
   font-weight: bolder;
   background-color: beige;
+  z-index: 555;
 }
 
 ul {

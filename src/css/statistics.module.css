@@ -3,6 +3,7 @@
   background-color: beige;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 .header {
   border-bottom: 2px solid;
