@@ -22,18 +22,21 @@ interface TaskCardProps {
   updateTaskStatus: (taskId: number, status: string) => void;
 }
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return format(date, "dd/MM/yyyy HH:mm:ss");
-};
-function formatISODateToCustomFormat(isoDate: string, customFormat: string) {
-  return format(new Date(isoDate), customFormat);
-}
-
 const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, getTasks }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [editedTask, setEditedTask] = useState<Task>({ ...task });
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editedTask, setEditedTask] = useState<Task>(task);
   const token = localStorage.getItem("token");
+
+  const handleDelete = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(editedTask.id);
+    setDeleteModalOpen(false);
+  };
+
   const handleEdit = () => {
     setModalOpen(true);
   };
@@ -45,6 +48,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
       updateTaskStatus(editedTask.id, newStatus);
     }
   };
+  function formatISODateToCustomFormat(isoDate: string, customFormat: string) {
+    return format(new Date(isoDate), customFormat);
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,9 +58,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
       const taskToUpdate = {
         title: editedTask.title,
         description: editedTask.description,
-        end_date: new Date(editedTask.end_date).toISOString().slice(0, 19).replace("T", " "),
+        end_date: formatISODateToCustomFormat(editedTask.end_date, "yyyy-MM-dd HH:mm:ss"),
         id: editedTask.id,
       };
+
       await axios.put(`${HOST_NAME}/task`, taskToUpdate, {
         headers: {
           token: token,
@@ -87,41 +94,58 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
   return (
     <div className={styles.task_card}>
       <h3 className={styles.task_title}>{editedTask.title}</h3>
-      <p>Description: {editedTask.description}</p>
+      <p>Des: {editedTask.description}</p>
       <select
         className={styles.status_select}
-        style={{ backgroundColor: getStatusColor(editedTask.status) }}
+        style={{ backgroundColor: getStatusColor(task.status) }}
         name="status"
-        value={editedTask.status}
+        value={task.status}
         onChange={(e) => handleStatusChange(e)}
       >
         <option value="todo">Todo</option>
         <option value="in progress">In Progress</option>
         <option value="done">Done</option>
       </select>
-      <p>Creation Date: {formatDate(task.creation_date)}</p>
-      <p>End Date: {formatDate(editedTask.end_date)}</p>
+
+      <p>Creation Date: {formatISODateToCustomFormat(task.creation_date, "dd/MM/yyyy HH:mm:ss")}</p>
+      <p>End Date: {formatISODateToCustomFormat(task.end_date, "dd/MM/yyyy HH:mm:ss")}</p>
       <div>
         <button className={styles.btn} onClick={handleEdit}>
           Edit
         </button>
-        <button className={styles.btn} onClick={() => onDelete(task.id)}>
+        <button className={styles.btn} onClick={handleDelete}>
           Delete
         </button>
       </div>
+      <Modal
+        className={styles.delete_modal}
+        isOpen={isDeleteModalOpen}
+        onRequestClose={() => setDeleteModalOpen(false)}
+        contentLabel="Delete Confirmation Modal"
+      >
+        <button className={styles.modal_btn_close} onClick={() => setDeleteModalOpen(false)}>
+          X
+        </button>
+        <div className={styles.delete_modal_body}>
+          <h2 className={styles.modal_title}>Confirm Delete</h2>
+          <button className={styles.modal_btn} onClick={handleConfirmDelete}>
+            Confirm Delete
+          </button>
+        </div>
+      </Modal>
       <Modal
         className={styles.react_modal}
         isOpen={isModalOpen}
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Edit Task Modal"
       >
-        <h2> Edit Task</h2>
+        <h2 className={styles.modal_title}> Edit Task</h2>
         <button className={styles.modal_btn_close} onClick={() => setModalOpen(false)}>
           X
         </button>
         <form onSubmit={handleSave} className={styles.modal_form}>
           <div>
-            <input required type="text" name="title" value={editedTask.title} onChange={handleChange} maxLength={35} />
+            <input required type="text" name="title" value={editedTask.title} onChange={handleChange} maxLength={32} />
           </div>
           <div>
             <textarea
@@ -130,6 +154,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
               name="description"
               value={editedTask.description}
               onChange={handleChange}
+              maxLength={36}
             />
           </div>
           <div>

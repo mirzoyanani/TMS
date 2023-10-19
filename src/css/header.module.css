@@ -12,15 +12,14 @@
   border-bottom: 2px solid;
 }
 
-/* Logo styles */
 .logo {
   font-size: 60px;
   font-weight: bold;
   color: #0056b3;
   font-weight: bolder;
+  cursor: pointer;
 }
 
-/* Search input and button styles */
 .search {
   display: flex;
   align-items: center;

@@ -39,10 +39,9 @@ const NewPasswordCard = (props: Props) => {
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+      throw new Error(`Error :${error}`);
     }
+    setLoading(false);
   }
 
   return (

@@ -9,6 +9,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch, setSearchValue }) => {
   const [inputValue, setInputValue] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  function handleRelod() {
+    location.reload();
+  }
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -36,7 +39,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch, setSearchValue }) => {
   return (
     <header className={styles.header}>
       <div className={styles.left}>
-        <div className={styles.logo}>T M S</div>
+        <div className={styles.logo} onClick={handleRelod}>
+          T M S
+        </div>
       </div>
       <div className={styles.search}>
         <form onSubmit={handleSearchSubmit}>

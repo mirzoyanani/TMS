@@ -70,7 +70,6 @@ const UserProfile: React.FC = () => {
 
   const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log("chexav");
 
     if (
       (selectedImage && userData) ||
@@ -82,7 +81,6 @@ const UserProfile: React.FC = () => {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("surname", surname);
-      //   formData.append("email", email);
       formData.append("telephone", telephone);
       if (selectedImage) {
         formData.append("profilePicture", selectedImage);

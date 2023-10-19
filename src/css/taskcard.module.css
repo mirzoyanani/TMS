@@ -1,13 +1,19 @@
 .task_card {
   border: 2px solid #0056b3;
   border-radius: 5px;
-  padding: 16px;
+  padding: 10px;
   margin: 16px;
   background-color: #fff;
   width: 300px;
   position: relative;
   height: 140px;
+  display: flex;
+  flex-direction: column;
 }
+.delete_modal {
+  width: 400px;
+}
+
 .status_select {
   position: absolute;
   top: 5px;
@@ -34,19 +40,37 @@
   font-weight: bolder;
   color: #0056b3;
 }
+.task_title {
+  margin-top: 15px;
+}
 .react_modal {
   width: 450px;
   height: 400px;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
   z-index: 1000;
   position: relative;
+}
+.delete_modal {
+  width: 270px;
+  height: 150px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 1000;
+  position: relative;
+  padding: 30px;
 }
 .modal_btn_close {
   position: absolute;
@@ -57,7 +81,13 @@
   border: 2px solid #0056b3;
   cursor: pointer;
 }
-
+.delete_modal_body {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  height: 130px;
+  justify-content: space-between;
+}
 .react_modal-overlay {
   position: fixed;
   top: 0;
@@ -71,8 +101,9 @@
   align-items: center;
 }
 .modal_title {
+  color: #0056b3;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 20px;
 }
 .modal_form {
   display: flex;
