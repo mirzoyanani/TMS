@@ -50,12 +50,8 @@ const UserProfile: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const ModalToggle = (): void => {
+    setModalIsOpen(!modalIsOpen);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +108,7 @@ const UserProfile: React.FC = () => {
         {" "}
         T M S{" "}
       </div>
+
       <div className={styles.body}>
         <div className={styles.main_modal}>
           <div className={styles.image_part}>
@@ -124,7 +121,7 @@ const UserProfile: React.FC = () => {
             </div>
           </div>
           <div className={styles.button_part}>
-            <button className={styles.updateButton} onClick={openModal}>
+            <button className={styles.updateButton} onClick={ModalToggle}>
               Update Info
             </button>
           </div>
@@ -133,11 +130,14 @@ const UserProfile: React.FC = () => {
 
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        onRequestClose={ModalToggle}
         contentLabel="Update User Modal"
         className={styles.modalContent}
         overlayClassName={styles.modalOverlay}
       >
+        <button className={styles.modal_btn_close} type="button" onClick={ModalToggle}>
+          X
+        </button>
         <h2 className={styles.modalTitle}>Update User Information</h2>
         <div className={styles.image_div}>
           <label className={styles.label}>Image:</label>
@@ -159,7 +159,7 @@ const UserProfile: React.FC = () => {
           )}
           <input type="file" accept="image/*" onChange={handleImageChange} className={styles.file_input} />
         </div>
-        <form onSubmit={handleUpdate}>
+        <form className={styles.form_info} onSubmit={handleUpdate}>
           <div>
             <label className={styles.label}>Name:</label>
             <input

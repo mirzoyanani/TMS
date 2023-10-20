@@ -34,10 +34,11 @@
 }
 .main_modal {
   width: 700px;
-  height: 340px;
+  background-color: beige;
   border: 2px solid #0056b3;
   padding: 20px;
   font-weight: bolder;
+  margin: 5px;
 }
 .file_input {
   margin-top: 10px;
@@ -62,9 +63,10 @@
 .modalContent {
   background-color: #fff;
   border-radius: 8px;
-  padding: 20px;
-  width: auto;
+  padding: 40px;
+  width: 450px;
   margin: 0 auto;
+  position: relative;
 }
 
 .modalOverlay {
@@ -130,4 +132,75 @@
 }
 .first_part {
   display: flex;
+}
+.modal_btn_close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 25px;
+  color: #0056b3;
+  border: 2px solid #0056b3;
+  cursor: pointer;
+}
+.input {
+  border: 2px solid #0056b3;
+}
+
+@media (max-width: 523px) {
+  .image_part {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 30px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 670px) {
+  .modalContent {
+    width: 350px;
+  }
+}
+
+@media (max-width: 600px) {
+  .modalContent {
+    width: 320px;
+  }
+}
+
+@media (max-width: 430px) {
+  .form_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 430px) {
+  .modalContent {
+    width: 290px;
+  }
+  .form_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 390px) {
+  .modalContent {
+    width: 240px;
+  }
+  .form_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    gap: 10px;
+  }
 }
