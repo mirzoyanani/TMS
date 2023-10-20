@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: beige;
-  padding: 10px 50px;
+  padding: 10px 10px;
   color: #0056b3;
   border-bottom: 2px solid;
 }
@@ -26,12 +26,12 @@
   margin-right: 20px;
 }
 
-input[type="text"] {
+.header_input {
   width: 450px;
   padding: 5px;
   border: 2px solid #0056b3;
   border-radius: 4px;
-  margin-right: 10px;
+  /* margin-right: 10px; */
   background-color: beige;
 }
 
@@ -75,4 +75,104 @@ li {
 
 li:hover {
   background-color: #f0f0f0;
+}
+@media (max-width: 1000px) {
+  .logo {
+    font-size: 45px;
+  }
+
+  button.searchButton {
+    display: none;
+  }
+}
+
+@media (max-width: 775px) {
+  .logo {
+    font-size: 35px;
+  }
+  input[type="text"] {
+    width: 380px;
+    padding: 5px;
+    border: 2px solid #0056b3;
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: beige;
+  }
+}
+
+@media (max-width: 670px) {
+  .logo {
+    font-size: 30px;
+  }
+  input[type="text"] {
+    width: 300px;
+    padding: 5px;
+    border: 2px solid #0056b3;
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: beige;
+  }
+}
+@media (max-width: 600px) {
+  input[type="text"] {
+    width: 280px;
+  }
+}
+@media (max-width: 561px) {
+  input[type="text"] {
+    width: 250px;
+  }
+}
+@media (max-width: 522px) {
+  input[type="text"] {
+    width: 230px;
+  }
+}
+
+@media (max-width: 428px) {
+  .userIcon {
+    font-size: 25px;
+  }
+  .header {
+    padding: 10px 10px;
+  }
+  input[type="text"] {
+    width: 220px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 422px) {
+  .userIcon {
+    font-size: 25px;
+  }
+  input[type="text"] {
+    width: 220px;
+    margin: 0;
+  }
+}
+@media (max-width: 351px) {
+  .userIcon {
+    font-size: 25px;
+  }
+  input[type="text"] {
+    width: 210px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 382px) {
+  .userIcon {
+    font-size: 25px;
+  }
+  input[type="text"] {
+    width: 180px;
+    margin: 0;
+  }
+}
+@media (max-width: 345px) {
+  input[type="text"] {
+    width: 160px;
+    margin: 0;
+  }
 }

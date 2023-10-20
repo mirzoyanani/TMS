@@ -3,8 +3,8 @@
   border-radius: 5px;
   padding: 10px;
   margin: 16px;
-  background-color: #fff;
-  width: 300px;
+  background-color: beige;
+  width: 310px;
   position: relative;
   height: 140px;
   display: flex;
@@ -44,7 +44,7 @@
   margin-top: 15px;
 }
 .react_modal {
-  width: 450px;
+  width: 400px;
   height: 400px;
   position: fixed;
   top: 50%;
@@ -58,7 +58,7 @@
   position: relative;
 }
 .delete_modal {
-  width: 270px;
+  width: 250px;
   height: 150px;
   position: fixed;
   top: 50%;
@@ -112,8 +112,9 @@
   flex-direction: column;
   height: 100%;
 }
+
 .discription_area {
-  width: 460px;
+  width: 270px;
   height: 50px;
   max-width: 460px;
   max-height: 50px;
@@ -129,7 +130,7 @@
   width: 100%;
 }
 .modal_btn {
-  width: 150px;
+  width: 140px;
   height: 25px;
   border: 2px solid #0056b3;
   background-color: beige;
@@ -143,4 +144,46 @@
 }
 .task_title {
   color: #0056b3;
+}
+.newTaskTitle {
+  width: 290px;
+  padding: 5px;
+  border: 2px solid #0056b3;
+  border-radius: 4px;
+  background-color: beige;
+  display: block;
+}
+.edit_del_btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+@media (max-width: 351px) {
+  .task_card button {
+    margin-right: 0;
+    width: 120px;
+  }
+}
+@media (max-width: 455px) {
+  .setPage_btns > button {
+    width: 150px;
+  }
+  .react_modal {
+    width: 350px;
+  }
+}
+@media (max-width: 390px) {
+  .react_modal {
+    width: 310px;
+  }
+}
+@media (max-width: 350px) {
+  .react_modal {
+    width: 290px;
+  }
+}
+@media (max-width: 340px) {
+  .react_modal {
+    width: 280px;
+  }
 }

@@ -45,7 +45,13 @@ const Header: React.FC<HeaderProps> = ({ onSearch, setSearchValue }) => {
       </div>
       <div className={styles.search}>
         <form onSubmit={handleSearchSubmit}>
-          <input type="text" placeholder="Search" value={inputValue} onChange={handleSearchInput} />
+          <input
+            type="text"
+            className={styles.header_input}
+            placeholder="Search"
+            value={inputValue}
+            onChange={handleSearchInput}
+          />
           <button className={styles.searchButton}>Search</button>
         </form>
       </div>

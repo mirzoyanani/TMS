@@ -215,9 +215,29 @@ const GeneralPage = () => {
         {!searchValue && (
           <div className={styles.main}>
             <div>
-              <button className={styles.createBask} onClick={ModalToggle}>
+              <button className={styles.createTask} onClick={ModalToggle}>
                 Create Task
               </button>
+            </div>
+            <div className={styles.changeStatusBtnsSelect}>
+              <select
+                value={status}
+                onChange={(e) => {
+                  setStatus(e.target.value);
+                  setPage(1);
+                }}
+                className={styles.statusSelect}
+              >
+                <option className={styles.taskstatus} value="todo">
+                  todo
+                </option>
+                <option className={styles.taskstatus} value="in progress">
+                  in progress
+                </option>
+                <option className={styles.taskstatus} value="done">
+                  done
+                </option>
+              </select>
             </div>
             <div className={styles.changeStatusBtns}>
               <button
@@ -253,7 +273,7 @@ const GeneralPage = () => {
             </div>
           </div>
         )}
-        {tasks.length && (
+        {tasks.length > 0 && (
           <button className={styles.sortingButton} onClick={toggleSortingOrder}>
             Sorting Order - {orderBy === "ASC" ? "Ascending" : "Descending"}
           </button>
@@ -271,7 +291,15 @@ const GeneralPage = () => {
           <form onSubmit={createTask} className={styles.modal_form}>
             <div>
               <label htmlFor="title">Title:</label>
-              <input type="text" maxLength={32} id="title" name="title" onChange={handleInputChange} required />
+              <input
+                className={styles.newTaskTitle}
+                type="text"
+                maxLength={32}
+                id="title"
+                name="title"
+                onChange={handleInputChange}
+                required
+              />
             </div>
             <div>
               <label htmlFor="description">Description:</label>
@@ -301,7 +329,7 @@ const GeneralPage = () => {
             </div>
           </form>
         </Modal>
-        {tasks.length ? (
+        {tasks.length > 0 ? (
           <div className={styles.tasks}>
             {tasks.map((task) => (
               <TaskCard
@@ -316,7 +344,7 @@ const GeneralPage = () => {
         ) : (
           <div className={styles.noTasks}>Create your Tasks</div>
         )}
-        {tasks.length && (
+        {tasks.length > 0 && (
           <div className={styles.setPage_btns}>
             <button onClick={() => handlePageChange(page - 1)}>previous</button>
             <span className={styles.page_num}>{page}</span>

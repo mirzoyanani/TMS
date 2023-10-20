@@ -10,6 +10,7 @@
   padding: 10px 20px;
   justify-content: space-between;
   background-color: beige;
+  gap: 10px;
 }
 .middle_part {
   display: flex;
@@ -21,11 +22,9 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-left: 2px solid #0056b3;
-  padding-left: 70px;
   gap: 40px;
 }
-.createBask,
+.createTask,
 .taskstatus {
   width: 250px;
   height: 30px;
@@ -35,8 +34,19 @@
   color: #0056b3;
   cursor: pointer;
 }
+.statusSelect {
+  display: none;
+  width: 180px;
+  height: 30px;
+  border: 2px solid #0056b3;
+  border-radius: 4px;
+  font-weight: bolder;
+  color: #0056b3;
+  cursor: pointer;
+  text-align: center;
+}
 .modal {
-  width: 450px;
+  width: 400px;
   height: 400px;
   position: fixed;
   top: 50%;
@@ -45,9 +55,21 @@
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 20px;
+  padding: 10px;
   z-index: 1000;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.newTaskTitle {
+  width: 290px;
+  padding: 5px;
+  border: 2px solid #0056b3;
+  border-radius: 4px;
+  background-color: beige;
+  display: block;
 }
 .modal_btn_close {
   position: absolute;
@@ -71,9 +93,10 @@
   height: 100%;
 }
 .discription_area {
-  width: 460px;
+  /* width: 460px; */
+  width: 270px;
   height: 50px;
-  max-width: 460px;
+  max-width: 300px;
   max-height: 50px;
   border: 2px solid #0056b3;
   border-radius: 5px;
@@ -104,6 +127,7 @@
   cursor: pointer;
   font-weight: bolder;
   color: #0056b3;
+  border-radius: 4px;
 }
 .btns {
   display: flex;
@@ -111,10 +135,10 @@
 }
 .tasks {
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
-  /* padding: 10px; */
   gap: auto;
-  justify-content: center;
+  justify-content: space-evenly;
   min-height: 515px;
 }
 .noTasks {
@@ -144,4 +168,71 @@
   font-weight: bolder;
   border-bottom: 2px solid;
   padding: 5px;
+}
+
+@media (max-width: 1110px) {
+  .changeStatusBtns {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 1150px) {
+  .changeStatusBtns {
+    gap: 5px;
+  }
+}
+@media (max-width: 1050px) {
+  .changeStatusBtns {
+    gap: 1px;
+  }
+  .main {
+    gap: 1px;
+  }
+}
+@media (max-width: 1030px) {
+  .createTask,
+  .taskstatus {
+    width: 200px;
+  }
+}
+@media (max-width: 825px) {
+  .createTask,
+  .taskstatus {
+    width: 180px;
+  }
+}
+
+@media (max-width: 750px) {
+  .statusSelect {
+    display: block;
+    background-color: beige;
+  }
+  .changeStatusBtns {
+    display: none;
+  }
+}
+@media (max-width: 420px) {
+  .createTask,
+  .statusSelect {
+    width: 140px;
+  }
+}
+
+@media (max-width: 455px) {
+  .setPage_btns > button {
+    width: 150px;
+  }
+  .modal {
+    width: 350px;
+  }
+}
+@media (max-width: 390px) {
+  .modal {
+    width: 320px;
+  }
+}
+@media (max-width: 350px) {
+  .modal {
+    width: 300px;
+  }
 }

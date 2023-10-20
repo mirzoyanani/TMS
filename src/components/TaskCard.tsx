@@ -109,7 +109,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
 
       <p>Creation Date: {formatISODateToCustomFormat(task.creation_date, "dd/MM/yyyy HH:mm:ss")}</p>
       <p>End Date: {formatISODateToCustomFormat(task.end_date, "dd/MM/yyyy HH:mm:ss")}</p>
-      <div>
+      <div className={styles.edit_del_btns}>
         <button className={styles.btn} onClick={handleEdit}>
           Edit
         </button>
@@ -145,9 +145,19 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
         </button>
         <form onSubmit={handleSave} className={styles.modal_form}>
           <div>
-            <input required type="text" name="title" value={editedTask.title} onChange={handleChange} maxLength={32} />
+            <label htmlFor="title">Title:</label>
+            <input
+              required
+              type="text"
+              name="title"
+              value={editedTask.title}
+              className={styles.newTaskTitle}
+              onChange={handleChange}
+              maxLength={32}
+            />
           </div>
           <div>
+            <label htmlFor="description">Description:</label>
             <textarea
               required
               className={styles.discription_area}
@@ -158,12 +168,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
             />
           </div>
           <div>
+            <label htmlFor="endDate">End Date and Time:</label>
             <input
               required
               type="datetime-local"
               name="end_date"
               value={formatISODateToCustomFormat(editedTask.end_date, "yyyy-MM-dd'T'HH:mm")}
               onChange={handleChange}
+              className={styles.task_date}
             />
           </div>
           <div className={styles.btns}>
