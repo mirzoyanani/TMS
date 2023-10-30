@@ -1,127 +1,100 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-
 import styles from "../css/userProfile.module.css";
 import axios from "axios";
 import { HOST_NAME } from "../lib";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
-interface Userdata {
+import ProfileUpdate from "../components/modals/ProfileUpdate";
+export interface UserdataT {
   name: string;
   surname: string;
   email: string;
   telephone: string;
+  image?: string;
 }
+
 const UserProfile: React.FC = () => {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState<null | UserdataT>(null);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [userData, setUserData] = useState<Userdata>();
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [image, setImage] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const token = localStorage.getItem("token");
-  async function getUserData() {
-    try {
-      const response = await axios({
-        url: `${HOST_NAME}/user`,
-        method: "GET",
-        headers: {
-          token: token,
-        },
-        responseType: "json",
-      });
-      const userData = response.data.data.data[0];
-      setUserData(userData);
-      setName(userData.name);
-      setSurname(userData.surname);
-      setEmail(userData.email);
-      setImage(userData.image);
-      setTelephone(userData.telephone);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    getUserData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setLoading(true);
+    (async () => {
+      setUserData(await getUserData(token!));
+      setLoading(false);
+    })();
   }, [token]);
 
-  const ModalToggle = (): void => {
+  const modalToggle = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
-    }
-  };
-
-  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>, imageFile: File | null) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
 
-    if (
-      (selectedImage && userData) ||
-      (userData && userData.name != name) ||
-      (userData && userData.surname != surname) ||
-      (userData && userData.email != email) ||
-      (userData && userData.telephone != telephone)
-    ) {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("surname", surname);
-      formData.append("telephone", telephone);
-      if (selectedImage) {
-        formData.append("profilePicture", selectedImage);
-      } else {
-        formData.append("profilePicture", image);
-      }
+    formData.append("profilePicture", imageFile ?? userData!.image!);
 
-      try {
-        await axios({
-          url: `${HOST_NAME}/user`,
-          method: "PUT",
-          headers: {
-            token: token,
-          },
-          data: formData,
-        });
-        getUserData();
-        setModalIsOpen(false);
-      } catch (error) {
-        console.error(error);
-      }
+    try {
+      await axios({
+        url: `${HOST_NAME}/user`,
+        method: "PUT",
+        headers: {
+          token: token,
+        },
+        data: formData,
+      });
+      const data = await getUserData(token!);
+      setUserData(data);
+      setModalIsOpen(false);
+    } catch (error) {
+      console.error(error);
     }
+
     setModalIsOpen(false);
   };
 
   return (
     <div className={styles.main}>
+      {loading && (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 999,
+            backgroundColor: "white",
+            height: "100vh",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "40px",
+          }}
+        >
+          LOADING.....
+        </div>
+      )}
       <div className={styles.header} onClick={() => navigate("/general")}>
-        {" "}
-        T M S{" "}
+        T M S
       </div>
 
       <div className={styles.body}>
         <div className={styles.main_modal}>
           <div className={styles.image_part}>
-            <img style={{ width: "250px", height: "250px" }} src={`${HOST_NAME}/images/${image}`} alt="" />
+            <img style={{ width: "250px", height: "250px" }} src={`${HOST_NAME}/images/${userData?.image}`} alt="" />
             <div className={styles.info}>
-              <p className={styles.userInfo}>Name: {name}</p>
-              <p className={styles.userInfo}>Surname: {surname}</p>
-              <p className={styles.userInfo}>Email: {email}</p>
-              <p className={styles.userInfo}>Telephone: {telephone}</p>
+              <p className={styles.userInfo}>Name: {userData?.name}</p>
+              <p className={styles.userInfo}>Surname: {userData?.surname}</p>
+              <p className={styles.userInfo}>Email: {userData?.email}</p>
+              <p className={styles.userInfo}>Telephone: {userData?.telephone}</p>
             </div>
           </div>
           <div className={styles.button_part}>
-            <button className={styles.updateButton} onClick={ModalToggle}>
+            <button className={styles.updateButton} onClick={modalToggle}>
               Update Info
             </button>
           </div>
@@ -130,71 +103,12 @@ const UserProfile: React.FC = () => {
 
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={ModalToggle}
+        onRequestClose={modalToggle}
         contentLabel="Update User Modal"
         className={styles.modalContent}
         overlayClassName={styles.modalOverlay}
       >
-        <button className={styles.modal_btn_close} type="button" onClick={ModalToggle}>
-          X
-        </button>
-        <h2 className={styles.modalTitle}>Update User Information</h2>
-        <div className={styles.image_div}>
-          <label className={styles.label}>Image:</label>
-          {previewImage && (
-            <img
-              style={{ width: "100px", height: "100px" }}
-              src={previewImage}
-              alt="Preview"
-              className={styles.previewImage}
-            />
-          )}
-          {!previewImage && (
-            <img
-              style={{ width: "100px", height: "100px" }}
-              src={`${HOST_NAME}/images/${image}`}
-              alt="Preview"
-              className={styles.previewImage}
-            />
-          )}
-          <input type="file" accept="image/*" onChange={handleImageChange} className={styles.file_input} />
-        </div>
-        <form className={styles.form_info} onSubmit={handleUpdate}>
-          <div>
-            <label className={styles.label}>Name:</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={styles.input}
-              required
-            />
-          </div>
-          <div>
-            <label className={styles.label}>Surname:</label>
-            <input
-              type="text"
-              value={surname}
-              onChange={(e) => setSurname(e.target.value)}
-              className={styles.input}
-              required
-            />
-          </div>
-          <div>
-            <label className={styles.label}>Telephone:</label>
-            <input
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              className={styles.input}
-              required
-              type="text"
-              pattern="^\+374 \d{8}$"
-              placeholder="+374 12345678"
-            />
-          </div>
-
-          <button className={styles.updateButton}>Update</button>
-        </form>
+        <ProfileUpdate handleUpdate={handleUpdate} userData={userData} onClose={modalToggle} />
       </Modal>
       <Footer />
     </div>
@@ -202,3 +116,16 @@ const UserProfile: React.FC = () => {
 };
 
 export default UserProfile;
+
+async function getUserData(token: string) {
+  const response = await axios({
+    url: `${HOST_NAME}/user`,
+    method: "GET",
+    headers: {
+      token: token,
+    },
+    responseType: "json",
+  });
+
+  return response.data.data.items[0];
+}

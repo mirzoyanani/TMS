@@ -8,8 +8,7 @@ const Statistics = () => {
   return (
     <div className={styles.main}>
       <div className={styles.header} onClick={() => navigate("/general")}>
-        {" "}
-        T M S{" "}
+        T M S
       </div>
       <div className={styles.structure}>
         <TaskStatusChart />

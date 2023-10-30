@@ -3,10 +3,10 @@ import styles from "../css/register.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { HOST_NAME } from "../lib";
+
 const Register: React.FC = () => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
-  //   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -33,18 +33,34 @@ const Register: React.FC = () => {
     });
   };
 
+  const selectProfilePicture = () => {
+    const fileInput = document.getElementById("profileImageInput") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post(`${HOST_NAME}/auth/register`, formData, {
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("surname", formData.surname);
+      formDataToSend.append("telephone", formData.telephone);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("password", formData.password);
+      formDataToSend.append("profilePicture", formData.profilePicture as Blob);
+
+      const response = await axios.post(`${HOST_NAME}/auth/register`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
       if (response.data) {
-        naviagte("/");
+        navigate("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -57,78 +73,92 @@ const Register: React.FC = () => {
   return (
     <div className={styles.main}>
       <div className={styles.register_container}>
-        <h2 className={styles.title}> T M S Registration</h2>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.groups}>
-            <div className={styles.form_group}>
-              <label htmlFor="firstName">First Name</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
-            </div>
-            <div className={styles.form_group}>
-              <label htmlFor="lastName">Last Name</label>
+        <h2 className={styles.title}>T M S Registration</h2>
+        <form onSubmit={handleSubmit} className={styles.registerForm}>
+          <div className={styles.form_group}>
+            <div className={styles.imageInput}>
+              <label htmlFor="profileImage">Profile Picture</label>
               <input
-                type="text"
-                id="surame"
-                name="surname"
-                value={formData.surname}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className={styles.groups}>
-            <div className={styles.form_group}>
-              <label htmlFor="telephone">Telephone</label>
-              <input
-                id="telephone"
-                name="telephone"
-                type="text"
-                pattern="^\+374 \d{8}$"
-                placeholder="+374 12345678"
-                value={formData.telephone}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={styles.form_group}>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className={styles.groups}>
-            <div className={styles.form_group}>
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-                minLength={8}
-              />
-            </div>
-            <div className={`${styles.form_group} ${styles.imageInput}`}>
-              <label htmlFor="profileImage">Upload Profile Image</label>
-              <input
+                style={{ display: "none" }}
                 type="file"
-                id="profileImage"
-                name="profileImage"
+                id="profileImageInput"
+                name="profilePicture"
                 accept="image/*"
                 onChange={handleImageChange}
                 required
               />
+              <img
+                src={
+                  formData.profilePicture
+                    ? URL.createObjectURL(formData.profilePicture)
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlAEj8WYKph5_UH9Sob8cBsmH1LilAriJxXTzNyAxiJP5tQRWYV3Hz-2oj38r7Cnw1hp8&usqp=CAU"
+                }
+                alt="Profile Picture"
+                className={styles.profileImage}
+              />
+              <button type="button" className={styles.submitButton} onClick={selectProfilePicture}>
+                {formData.profilePicture ? "Change Picture" : "Select Picture"}
+              </button>
             </div>
           </div>
+
+          <div className={styles.form_group}>
+            <label htmlFor="name">First Name</label>
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
+          </div>
+
+          <div className={styles.form_group}>
+            <label htmlFor="surname">Last Name</label>
+            <input
+              type="text"
+              id="surname"
+              name="surname"
+              value={formData.surname}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className={styles.form_group}>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required />
+          </div>
+
+          <div className={styles.form_group}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              minLength={8}
+            />
+          </div>
+          <div className={styles.form_group}>
+            <label htmlFor="telephone">Telephone</label>
+            <input
+              type="tel"
+              id="telephone"
+              name="telephone"
+              value={formData.telephone}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
           {errorMsg && <div style={{ margin: "22px", color: "red" }}>{errorMsg}</div>}
-          {loading ? <button type="submit">Loading...</button> : <button type="submit">Register</button>}
+
+          {loading ? (
+            <button type="submit" className={styles.submitButton}>
+              Loading...
+            </button>
+          ) : (
+            <button type="submit" className={styles.submitButton}>
+              Register
+            </button>
+          )}
         </form>
       </div>
     </div>

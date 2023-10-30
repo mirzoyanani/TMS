@@ -34,7 +34,7 @@
   color: #0056b3;
   cursor: pointer;
 }
-.statusSelect {
+.status_select {
   display: none;
   width: 180px;
   height: 30px;
@@ -51,7 +51,7 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -60,9 +60,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
 }
+
 .newTaskTitle {
   width: 290px;
   padding: 5px;
@@ -90,7 +91,8 @@
   align-items: flex-start;
   justify-content: space-around;
   flex-direction: column;
-  height: 100%;
+  gap: 35px;
+  margin-top: 10px;
 }
 .discription_area {
   /* width: 460px; */
@@ -203,7 +205,7 @@
 }
 
 @media (max-width: 750px) {
-  .statusSelect {
+  .status_select {
     display: block;
     background-color: beige;
   }
@@ -213,7 +215,7 @@
 }
 @media (max-width: 420px) {
   .createTask,
-  .statusSelect {
+  .status_select {
     width: 140px;
   }
 }

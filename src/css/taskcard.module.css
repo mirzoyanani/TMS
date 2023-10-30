@@ -6,7 +6,7 @@
   background-color: beige;
   width: 310px;
   position: relative;
-  height: 140px;
+  max-height: 170px;
   display: flex;
   flex-direction: column;
 }

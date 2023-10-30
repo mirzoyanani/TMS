@@ -28,6 +28,7 @@ const CodCard = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  console.log(token);
 
   async function switchPage(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();

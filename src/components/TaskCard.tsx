@@ -1,9 +1,12 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import styles from "../css/taskcard.module.css";
 import Modal from "react-modal";
 import axios from "axios";
 import { format } from "date-fns";
 import { HOST_NAME } from "../lib";
+import Select from "./StatusSelect";
+import TaskUpdateModal from "./modals/TaskUpdate";
+import TaskDeleteModal from "./modals/DeleteModal";
 Modal.setAppElement("#root");
 
 interface Task {
@@ -17,12 +20,11 @@ interface Task {
 
 interface TaskCardProps {
   task: Task;
-  onDelete: (taskId: number) => void;
   getTasks: () => void;
   updateTaskStatus: (taskId: number, status: string) => void;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, getTasks }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({ task, updateTaskStatus, getTasks }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editedTask, setEditedTask] = useState<Task>(task);
@@ -39,74 +41,32 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
 
   const handleEdit = () => {
     setModalOpen(true);
+    setEditedTask(task);
   };
 
-  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = e.target.value;
-
-    if (newStatus !== editedTask.status) {
-      updateTaskStatus(editedTask.id, newStatus);
-    }
+  const handleStatusChange = (newStatus: string) => {
+    updateTaskStatus(editedTask.id, newStatus);
   };
   function formatISODateToCustomFormat(isoDate: string, customFormat: string) {
     return format(new Date(isoDate), customFormat);
   }
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  async function onDelete(taskId: number): Promise<void> {
     try {
-      const taskToUpdate = {
-        title: editedTask.title,
-        description: editedTask.description,
-        end_date: formatISODateToCustomFormat(editedTask.end_date, "yyyy-MM-dd HH:mm:ss"),
-        id: editedTask.id,
-      };
-
-      await axios.put(`${HOST_NAME}/task`, taskToUpdate, {
-        headers: {
-          token: token,
-        },
+      await axios.delete(`${HOST_NAME}/task/${taskId}`, {
+        headers: { token },
       });
       getTasks();
-      setModalOpen(false);
     } catch (error) {
-      console.error("Error updating task:", error);
+      throw new Error("Error deleting tasks ");
     }
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setEditedTask({ ...editedTask, [name]: value });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "done":
-        return "rgba(0, 255, 0, 0.19)";
-      case "in progress":
-        return "rgba(255, 208, 0, 0.35)";
-      case "todo":
-        return "rgba(255, 0, 0, 0.1)";
-      default:
-        return "black";
-    }
-  };
+  }
 
   return (
     <div className={styles.task_card}>
-      <h3 className={styles.task_title}>{editedTask.title}</h3>
-      <p>Des: {editedTask.description}</p>
-      <select
-        className={styles.status_select}
-        style={{ backgroundColor: getStatusColor(task.status) }}
-        name="status"
-        value={task.status}
-        onChange={(e) => handleStatusChange(e)}
-      >
-        <option value="todo">Todo</option>
-        <option value="in progress">In Progress</option>
-        <option value="done">Done</option>
-      </select>
-
+      <h3 className={styles.task_title}>{task.title}</h3>
+      <p>Des: {task.description}</p>
+      <Select value={task.status} onChange={handleStatusChange} styles={styles} />
       <p>Creation Date: {formatISODateToCustomFormat(task.creation_date, "dd/MM/yyyy HH:mm:ss")}</p>
       <p>End Date: {formatISODateToCustomFormat(task.end_date, "dd/MM/yyyy HH:mm:ss")}</p>
       <div className={styles.edit_del_btns}>
@@ -123,15 +83,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
         onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Confirmation Modal"
       >
-        <button className={styles.modal_btn_close} onClick={() => setDeleteModalOpen(false)}>
-          X
-        </button>
-        <div className={styles.delete_modal_body}>
-          <h2 className={styles.modal_title}>Confirm Delete</h2>
-          <button className={styles.modal_btn} onClick={handleConfirmDelete}>
-            Confirm Delete
-          </button>
-        </div>
+        <TaskDeleteModal onClose={() => setDeleteModalOpen(false)} onConfirmDelete={handleConfirmDelete} />
       </Modal>
       <Modal
         className={styles.react_modal}
@@ -139,52 +91,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete, updateTaskStatus, g
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Edit Task Modal"
       >
-        <h2 className={styles.modal_title}> Edit Task</h2>
-        <button className={styles.modal_btn_close} onClick={() => setModalOpen(false)}>
-          X
-        </button>
-        <form onSubmit={handleSave} className={styles.modal_form}>
-          <div>
-            <label htmlFor="title">Title:</label>
-            <input
-              required
-              type="text"
-              name="title"
-              value={editedTask.title}
-              className={styles.newTaskTitle}
-              onChange={handleChange}
-              maxLength={32}
-            />
-          </div>
-          <div>
-            <label htmlFor="description">Description:</label>
-            <textarea
-              required
-              className={styles.discription_area}
-              name="description"
-              value={editedTask.description}
-              onChange={handleChange}
-              maxLength={36}
-            />
-          </div>
-          <div>
-            <label htmlFor="endDate">End Date and Time:</label>
-            <input
-              required
-              type="datetime-local"
-              name="end_date"
-              value={formatISODateToCustomFormat(editedTask.end_date, "yyyy-MM-dd'T'HH:mm")}
-              onChange={handleChange}
-              className={styles.task_date}
-            />
-          </div>
-          <div className={styles.btns}>
-            <button className={styles.modal_btn}>Save</button>
-          </div>
-        </form>
+        <TaskUpdateModal
+          task={editedTask}
+          onClose={() => setModalOpen(false)}
+          isOpen={isModalOpen}
+          getTasks={getTasks}
+        />
       </Modal>
     </div>
   );
 };
-
-export default TaskCard;

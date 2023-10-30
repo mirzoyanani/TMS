@@ -34,7 +34,12 @@
 .form_group {
   margin-bottom: 20px;
 }
-
+.profileImage {
+  width: 200px;
+  height: 200px;
+  display: inline;
+  margin: 3px;
+}
 .form_group label {
   display: block;
   margin-bottom: 8px;

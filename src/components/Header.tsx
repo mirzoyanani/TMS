@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import styles from "../css/header.module.css";
 import { useNavigate } from "react-router-dom";
+// import { useDebounce } from "../hooks/useDebounce";
 interface HeaderProps {
   onSearch: (inputValue: string) => void;
   setSearchValue: (searchValue: string) => void;
 }
 const Header: React.FC<HeaderProps> = ({ onSearch, setSearchValue }) => {
   const [inputValue, setInputValue] = useState("");
+  // const searchQuery = useDebounce(inputValue, 300);
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   function handleRelod() {
@@ -51,8 +54,8 @@ const Header: React.FC<HeaderProps> = ({ onSearch, setSearchValue }) => {
             placeholder="Search"
             value={inputValue}
             onChange={handleSearchInput}
+            maxLength={32}
           />
-          <button className={styles.searchButton}>Search</button>
         </form>
       </div>
       <div className={styles.right}>
